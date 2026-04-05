@@ -110,5 +110,5 @@ class LBOModel:
             matrix.append(row)
             
         return pd.DataFrame(matrix, 
-                          index=[f"{x}x" for x in entry_range], 
-                          columns=[f"{x}x" for x in exit_range])
+                          index=[f"{float(x)}x" for x in entry_range], 
+                          columns=[f"{float(x)}x" for x in exit_range])

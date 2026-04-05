@@ -1,8 +1,5 @@
 import pandas as pd
-import numpy as np
-from openpyxl import Workbook
-from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
-from openpyxl.utils import get_column_letter
+from openpyxl.styles import Font, PatternFill, Alignment
 
 class ExcelWriter:
     def __init__(self, model):
