@@ -48,16 +48,20 @@ class LBOModel:
             ebit = ebitda - depreciation
             interest = curr_debt * interest_rate
             pretax = ebit - interest
+            
+            # Tax Shield: Interest is tax-deductible
             taxes = max(0, pretax * tax_rate)
             net_income = pretax - taxes
             
             capex = rev * capex_pct
-            change_in_wc = rev * 0.01 # Assumption: WC is 1% of revenue growth
+            # WC change based on revenue growth
+            change_in_wc = (rev - curr_rev) * 0.15 # Assumption: WC is 15% of incremental revenue
             
             fcf_pre_debt = net_income + depreciation - capex - change_in_wc
             
-            # Debt Paydown
-            debt_repayment = min(curr_debt, fcf_pre_debt)
+            # Debt Paydown (using FCF after min cash requirement if applicable)
+            # Simplified: use all FCF to pay down debt
+            debt_repayment = max(0, min(curr_debt, fcf_pre_debt))
             curr_debt -= debt_repayment
             
             proj_data.append({

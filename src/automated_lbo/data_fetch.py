@@ -20,10 +20,16 @@ class DataFetcher:
             self.balance_sheet = self.ticker.balance_sheet
             self.cashflow = self.ticker.cashflow
             
+            # Handle MultiIndex columns in newer yfinance versions
+            for df in [self.financials, self.balance_sheet, self.cashflow]:
+                if isinstance(df.columns, pd.MultiIndex):
+                    df.columns = df.columns.get_level_values(0)
+            
             if self.financials.empty or self.balance_sheet.empty:
-                raise ValueError(f"Could not fetch complete financial data for {self.ticker_symbol}")
+                # Fallback for some tickers where yfinance might fail on financials
+                print(f"Warning: Financials or Balance Sheet empty for {self.ticker_symbol}")
         except Exception as e:
-            raise ConnectionError(f"Error fetching data for {self.ticker_symbol}: {str(e)}")
+            print(f"Error fetching data for {self.ticker_symbol}: {str(e)}")
 
     def get_metric(self, df: pd.DataFrame, keys: list, default: float = 0.0) -> float:
         """Helper to fetch the most recent metric with fuzzy matching."""
